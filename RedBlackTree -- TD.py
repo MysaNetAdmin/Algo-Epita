@@ -1,3 +1,4 @@
+from BTree import BTree
 from RedBlackTree import RedBlackTree
 
 def height(RBT):
@@ -11,6 +12,51 @@ def size(RBT):
         return 0
     else:
         return RBT.red + size(RBT.left) + size(RBT.right)
+
+def from234(B):
+    if B == None:
+        return None
+    if children == []:
+        children = [None] * (B.nbKeys + 1)
+    else:
+        children = B.children
+    T = RedBlackTree(B.keys[0], red = B.nbKeys > 1, left = from234(children[0]), right = from234(children[1]))
+    # 3 nodes or more
+    if B.nbKeys > 1:
+        T = RedBlackTree(B.nbKeys[1], red = False, left = T, right = from234(children[2]))
+        if B.nbKeys == 3:
+            R = RedBlackTree(B.nbKeys[2], red = True, left = T.right, right = from234(B.children[3]))
+            T.right = R
+    return T
+
+def to234(RBT):
+    if RBT == None:
+        return None
+    if RBT.left != None and RBT.right != None nad RBT.left.red and RBT.right.red:
+        keys = [RBT.left.key, RBT.key, RBT.right.key]
+        children = []
+        children.append(to234(RBT.left.left))
+        children.append(to234(RBT.left.right))
+        children.append(to234(RBT.right.left))
+        children.append(to234(RBT.right.right))
+    elif RBT.left != None and RBT.left.red:
+        keys = [RBT.left.key, RBT.key]
+        children = []
+        children.append(to234(RBT.left.left))
+        children.append(to234(RBT.left.right))
+        children.append(to234(RBT.right))
+    elif RBT.right != None and RBT.right.red:
+        keys = [RBT.key, RBT.right.key]
+        children = []
+        children.append(to234(RBT.right.left))
+        children.append(to234(RBT.right.right))
+        children.append(to234(RBT.left))
+    else:
+        keys = [RBT.key]
+        children = []
+        children.append(to234(RBT.left))
+        children.append(to234(RBT.right))
+    return BTree(keys, children)
 
 def split(RBT):
     (RBT.left.red, RBT.right.red) = (False, False)
