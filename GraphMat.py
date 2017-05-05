@@ -1,5 +1,6 @@
 class GraphMat:
 
-def __init__(self, order, directed = False):
-    self.order = order
-    self.directed = directed
+    def __init__(self, order, directed = False):
+        self.order = order
+        self.directed = directed
+        self.adj = [[0 for j in range(order)] for i in range(order)]

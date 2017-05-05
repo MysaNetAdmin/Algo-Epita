@@ -6,16 +6,33 @@ def addEdge(G, src, dst):
     if dst < 0 or dst >= G.order:
         raise Exception("Invalid dst")
     G.adj[src][dst] += 1
-    if not G.directed:
+    if not G.directed and src != dst:
         G.adj[dst][src] += 1
 
 def toDot(G):
     if G == None:
         return ' '
-    s = "diagraph G{\n"
+    if G.directed:
+        s = "diagraph G{\n"
+        sep = " -> "
+    else:
+        s = "graph G{\n"
+        sep = " -- "
     for i in range (G.order):
-        for j in range (G.order):
-            if G.adj[i][j] > 0:
-                s += str(o) + ' -> ' + str(j) + '\n'
+        jMax = G.order if G.directed else i + 1
+        for j in range (jMax):
+            for k in range(G.adj[i][j]):
+                s += ' ' + str(i) + sep + str(j) + '\n'
     s += "}\n"
     return s
+
+def fraomGRA(filename):
+    file = open(filename, 'r')
+    directed = bool(file.readline().strip())
+    order = int(file.readline().strip())
+    G = GraphMat(oder, directed)
+    for line in file.readline:
+        line = line.strip().split()
+        addEdge(G, int(line[0]), int(line[1]))
+    file.close()
+    return G
