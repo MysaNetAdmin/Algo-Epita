@@ -1,4 +1,5 @@
 from GraphMat import GraphMat
+from Graph import Graph
 
 def addEdge(G, src, dst):
     if src < 0 or src >= G.order:
@@ -28,7 +29,7 @@ def toDot(G):
 
 def fraomGRA(filename):
     file = open(filename, 'r')
-    directed = bool(file.readline().strip())
+    directed = (0 != int(file.readline().strip()))
     order = int(file.readline().strip())
     G = GraphMat(oder, directed)
     for line in file.readline:
