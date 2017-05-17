@@ -24,10 +24,11 @@ def addEdgeAdj(G, src, dst):
         G.adj[dst].append(src)
 
 def toDot(G):
+    file = open("graphMat.dot", 'w')
     if G == None:
         return ' '
     if G.directed:
-        s = "diagraph G{\n"
+        s = "digraph G{\n"
         sep = " -> "
     else:
         s = "graph G{\n"
@@ -38,13 +39,15 @@ def toDot(G):
             for k in range(G.adj[i][j]):
                 s += ' ' + str(i) + sep + str(j) + '\n'
     s += "}\n"
+    file.write(s)
+    file.close
     return s
 
 def toDotAdj(G):
     if G == None:
         return ' '
     if G.directed:
-        s = "diagraph G{\n"
+        s = "digraph G{\n"
         sep = " -> "
     else:
         s = "graph G{\n"
@@ -57,7 +60,7 @@ def toDotAdj(G):
     s += "}\n"
     return s
 
-def fromGRA(filename):
+def fromGRAMat(filename):
     file = open(filename, 'r')
     directed = (0 != int(file.readline().strip()))
     order = int(file.readline().strip())
@@ -72,7 +75,7 @@ def fromGRA(filename):
     file = open(filename, 'r')
     directed = (0 != int(file.readline().strip()))
     order = int(file.readline().strip())
-    G = GraphMat(oder, directed)
+    G = Graph(oder, directed)
     for line in file.readline:
         line = line.strip().split()
         addEdge(G, int(line[0]), int(line[1]))
@@ -81,7 +84,7 @@ def fromGRA(filename):
 
 def __bfs(G, src, M):
     Q = Queue()
-    Q = queue.enqueue(G, Q)
+    Q = queue.enqueue(src, Q)
     M[src] = -1
     while not queue.isEmpty(Q):
         src = queue.dequeue(Q)
@@ -91,7 +94,7 @@ def __bfs(G, src, M):
                 M[dst] = src
 
 def bfs(G, src):
-    M = [ None] * G.order
+    M = [ None ] * G.order
     __bfs(G, src,  M)
     for som in range(G.order):
         if M[som] == None:
@@ -110,28 +113,62 @@ def __bfsAdj(G, src, M):
                 M[dst] = src
 
 def bfsAdj(G, src):
-    M = [ None] * G.order
-    __bfs(G, src,  M)
+    M = [ None ] * G.order
+    __bfsAdj(G, src,  M)
     for som in range(G.order):
         if M[som] == None:
             __bfsAdj(G, som, M)
     return M
 
-G = GraphMat(9, True)
-addEdge(G, 0, 1)
-addEdge(G, 0, 2)
-addEdge(G, 0, 6)
-addEdge(G, 1, 3)
-addEdge(G, 2, 8)
-addEdge(G, 2, 6)
-addEdge(G, 3, 6)
-addEdge(G, 5, 2)
-addEdge(G, 5, 6)
-addEdge(G, 6, 3)
-addEdge(G, 6, 4)
-addEdge(G, 7, 5)
-addEdge(G, 7, 6)
-addEdge(G, 7, 8)
-g1 = toDot(G)
+def __dfsMat(G, src, M):
+    for dst in range(G.order):
+        if G.adj[src][dst] > 0:
+            if M[dst] == None:
+                M[dst] = src
+                print('edge', src, '->', dst)
+                __dfsMat(G, dst, M)
+            elif M[src] != dst:
+                print('back edge', src, '->', dst)
 
-#print(bfs(G, 8))
+def dfsMat(G, src):
+    M = [ None ] * G.order
+    M[src] = -1
+    __dfsMat(G, src, M)
+    for som in range(G.order):
+        if M[som] == None:
+            M[som] = - 1
+            __dfsMat(G, som, M)
+    return M
+
+def __dfsAdj(G, src, M, cpt, preff, suff):
+    cpt += 1
+    pref[src] = cpt
+    # Successors
+    for dst in ajdLists[src]:
+        if M[dst] == None:
+            M[dst] = src
+            print('edge', src, '->', dst)
+            cpt = __dfsAdj(G, dst, M, cpt, preff, suff)
+        elif pref[src] < pref[dst]:
+            print('forward edge', src, '->', dst)
+        elif suff[dst] == None:
+            print('back edge', src, '->', dst)
+        else:
+            print('cross edge', src, '->', dst)
+    # Suffix
+    cpt += 1
+    suff[src] = cpt
+    return cpt
+
+def dfsAdj(G, src):
+    M = [ None ] * G.order
+    preff = [ None ] * G.order
+    suff = [ None ] * G.order
+    cpt = 0
+    M[src] = -1
+    cpt = __dfsAdj(G, src, M, cpt, preff, suff)
+    for som in range(G.order):
+        if M[som] == None:
+            M[som] = - 1
+            cpt = __dfsAdj(G, som, M, cpt, preff, suff)
+    return M
