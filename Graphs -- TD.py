@@ -173,24 +173,24 @@ def dfsAdj(G, src):
             cpt = __dfsAdj(G, som, M, cpt, preff, suff)
     return M
 
-def __isBipartie(G, src, M):
+def __isBipartite(G, src, M):
     for dst in range(G.order):
         if G.adj[src][dst] > 0:
             if M[dst] == None:
                 M[dst] = 1 - M[src]
-                if not __isBipartie(G, dst,  M):
+                if not __isBipartite(G, dst,  M):
                     return False
             elif M[dst] = M[src]:
                 return False
     return True
 
-def isBipartie(G):
+def isBipartite(G):
     M = [ None ] * G.order
     for src in range(G.order):
         if M[src] == None:
             M[src] = 1
-            if not __isBipartie(G, src, M):
-                return false
+            if not __isBipartite(G, src, M):
+                return False
 return True
 
 def isBipartite(G):
@@ -209,4 +209,24 @@ def isBipartite(G):
                             queue.enqueue(dst, Q)
                         elif M[dst] == M[src]:
                             return False
+    return True
+
+def __isTree(G, src, M):
+    for dst in G.adjLists[src]:
+        if M[dst] == None:
+            M[dst] = src
+            if not __isTree(G, dst, M):
+                return False
+        elif M[src] != dst:
+            return False
+    return True
+
+def isTree(G):
+    M = [ None ] * G.order
+    M[0] = - 1
+    if not __isTree(G, 0, M):
+        return False
+    for src in range(1, G.order):
+        if M[src] == None:
+            return False
     return True
