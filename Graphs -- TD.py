@@ -172,3 +172,23 @@ def dfsAdj(G, src):
             M[som] = - 1
             cpt = __dfsAdj(G, som, M, cpt, preff, suff)
     return M
+
+def __isBipartie(G, src, M):
+    for dst in range(G.order):
+        if G.adj[src][dst] > 0:
+            if M[dst] == None:
+                M[dst] = 1 - M[src]
+                if not __isBipartie(G, dst,  M):
+                    return False
+            elif M[dst] = M[src]:
+                return False
+    return True
+
+def isBipartie(G):
+    M = [ None ] * G.order
+    for src in range(G.order):
+        if M[src] == None:
+            M[src] = 1
+            if not __isBipartie(G, src, M):
+                return false
+    return True
