@@ -191,4 +191,22 @@ def isBipartie(G):
             M[src] = 1
             if not __isBipartie(G, src, M):
                 return false
+return True
+
+def isBipartite(G):
+    M = [ None ] * G.order
+    Q = Queue()
+    for src in range(G.order):
+        if M[src] == None:
+            M[src] = 1
+            queue.enqueue(src, Q)
+            while not queue.isEmpty(Q):
+                src = queue.dequeue(Q)
+                for dst in range(G.order):
+                    if G.adj[src][dst] > 0:
+                        if M[dst] == None:
+                            M[dst] = 1 - M[src]
+                            queue.enqueue(dst, Q)
+                        elif M[dst] == M[src]:
+                            return False
     return True
