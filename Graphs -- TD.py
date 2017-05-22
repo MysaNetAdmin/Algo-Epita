@@ -265,10 +265,6 @@ def maxDist(G, src):
     return (dist[src], src)
 
 def diameter(G):
-    dist = [ None ] * G. order
-    s1 = maxDist(G, 0)
-    dist = [ None ] * G.order
-    s2 = maxDist(G, s1)
-    return dist[s2]
-
-def maxDist(G, src):
+    d1, s1 = maxDist(G, 0)
+    d2, s2 = maxDist(G, s1)
+    return d2
