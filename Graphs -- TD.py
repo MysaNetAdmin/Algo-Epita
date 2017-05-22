@@ -230,3 +230,45 @@ def isTree(G):
         if M[src] == None:
             return False
     return True
+
+def maxDist1e(G, src):
+    Q = Queue()
+    Q = queue.enqueue(src, Q)
+    M = [ None ] * G. order
+    M[src] = -1
+    cpt, lastSom = 0, 0
+    while not queue.isEmpty(Q):
+        src = queue.dequeue(Q)
+        if src == None:
+            if not queue.isEmpty(Q):
+                cpt +=1
+                queue.enqueue(None, Q)
+        else:
+            lastSom = src
+            for dst in G.adjlists[src]:
+                if M[dst] == None:
+                    Q = queue.enqueue(adj, Q)
+                    dist[dst] = dist[src] 1
+    return (cpt, lastSom)
+
+def maxDist(G, src):
+    Q = Queue()
+    Q = queue.enqueue(src, Q)
+    dist = [ None ] * G. order
+    dist[src] = 0
+    while not queue.isEmpty(Q):
+        src = queue.dequeue(Q)
+        for dst in G.adjlists[src]:
+            if dist[adj] == None:
+                Q = queue.enqueue(adj, Q)
+                dist[dst] = dist[src] 1
+    return (dist[src], src)
+
+def diameter(G):
+    dist = [ None ] * G. order
+    s1 = maxDist(G, 0)
+    dist = [ None ] * G.order
+    s2 = maxDist(G, s1)
+    return dist[s2]
+
+def maxDist(G, src):
