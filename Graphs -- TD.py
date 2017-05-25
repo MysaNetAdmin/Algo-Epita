@@ -2,6 +2,7 @@ from GraphMat import GraphMat
 from Graph import Graph
 from AlgoPy import queue
 from AlgoPy.queue import Queue
+from AlgoPy.stack import Stack
 import graphviz as gv
 
 def addEdge(G, src, dst):
@@ -180,7 +181,7 @@ def __isBipartite(G, src, M):
                 M[dst] = 1 - M[src]
                 if not __isBipartite(G, dst,  M):
                     return False
-            elif M[dst] = M[src]:
+            elif M[dst] == M[src]:
                 return False
     return True
 
@@ -191,7 +192,7 @@ def isBipartite(G):
             M[src] = 1
             if not __isBipartite(G, src, M):
                 return False
-return True
+    return True
 
 def isBipartite(G):
     M = [ None ] * G.order
@@ -231,7 +232,7 @@ def isTree(G):
             return False
     return True
 
-def maxDist1e(G, src):
+def maxDist1(G, src):
     Q = Queue()
     Q = queue.enqueue(src, Q)
     M = [ None ] * G. order
@@ -248,7 +249,7 @@ def maxDist1e(G, src):
             for dst in G.adjlists[src]:
                 if M[dst] == None:
                     Q = queue.enqueue(adj, Q)
-                    dist[dst] = dist[src] 1
+                    dist[dst] = dist[src]-1
     return (cpt, lastSom)
 
 def maxDist(G, src):
@@ -261,10 +262,33 @@ def maxDist(G, src):
         for dst in G.adjlists[src]:
             if dist[adj] == None:
                 Q = queue.enqueue(adj, Q)
-                dist[dst] = dist[src] 1
+                dist[dst] = dist[src]-1
     return (dist[src], src)
 
 def diameter(G):
     d1, s1 = maxDist(G, 0)
     d2, s2 = maxDist(G, s1)
     return d2
+
+def __topoSort(G, src, M, S):
+    M[ src ] = True
+    for dst in G.adjLists[src]:
+        if not M[dst]:
+            __topoSort(G, dst, M, S)
+    stack.push(src, S)
+
+def topoSort(G):
+    M = [ False ] * G.order
+    S = Stack()
+    __topoSort(G, src,  M)
+    for som in range(G.order):
+        if M[som] == None:
+            __topoSort(G, src,  M)
+    L = []
+    while not stack.isEmpty(S):
+        L.append(stack.pop(S))
+    return L
+
+def buildGraph(G, s, n, NG):
+    Q = Queue()
+    Q = queue.enqueue(s, Q)
